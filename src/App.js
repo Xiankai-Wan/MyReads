@@ -1,20 +1,34 @@
-import React from 'react'
-// import * as BooksAPI from './BooksAPI'
+import React, {Component} from 'react'
+import * as BooksAPI from './BooksAPI'
 import { Link } from 'react-router-dom'
 import { Route } from 'react-router-dom'
 import SearchBooks from './SearchBooks'
-import ListBooksContent from './ListBooksContent'
+import BookShelf from './BookShelf'
 import './App.css'
 
-class BooksApp extends React.Component {
+class BooksApp extends Component {
   state = {
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
+    shelf:{
+      currentlyReading:[],
+      wantToRead:[],
+      read:[]
+    }
   }
+    componentDidMount() {
+      const shelf = {
+        currentlyReading: [],
+        wantToRead: [],
+        read: []
+      };
+      BooksAPI.getAll().then((books)=>{
+        books.map((book) => (
+          book.shelf === 'currentlyReading' ? shelf.currentlyReading.push(book) :
+            (book.shelf === 'wantToRead' ? shelf.wantToRead.push(book) : shelf.read.push(book))
+        ))
+        this.setState({ shelf });
+      })
+    }
+
   render() {
     return (
       <div className="app">
@@ -23,7 +37,13 @@ class BooksApp extends React.Component {
             <div className="list-books-title">
               <h1>MyReads</h1>
             </div>
-            <ListBooksContent/>
+            <div className="list-books-content">
+              <div>
+                <BookShelf ThisShelfBooks={this.state.shelf.currentlyReading} ShelfName='Currently Reading' />
+                <BookShelf ThisShelfBooks={this.state.shelf.wantToRead} ShelfName='Want To Read' />
+                <BookShelf ThisShelfBooks={this.state.shelf.read} ShelfName='Read' />
+              </div>
+            </div>
             <div className="open-search">
               <Link to='/search'>Add a book</Link>
             </div>

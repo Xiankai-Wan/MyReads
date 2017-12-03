@@ -30,6 +30,7 @@ class BooksApp extends Component {
     }
 
   render() {
+    const { currentlyReading, wantToRead, read } = this.state.shelf;
     return (
       <div className="app">
       <Route exact path='/' render={()=>(
@@ -39,9 +40,9 @@ class BooksApp extends Component {
             </div>
             <div className="list-books-content">
               <div>
-                <BookShelf ThisShelfBooks={this.state.shelf.currentlyReading} ShelfName='Currently Reading' />
-                <BookShelf ThisShelfBooks={this.state.shelf.wantToRead} ShelfName='Want To Read' />
-                <BookShelf ThisShelfBooks={this.state.shelf.read} ShelfName='Read' />
+                <BookShelf ThisShelfBooks={currentlyReading} ShelfName='Currently Reading' />
+                <BookShelf ThisShelfBooks={wantToRead} ShelfName='Want To Read' />
+                <BookShelf ThisShelfBooks={read} ShelfName='Read' />
               </div>
             </div>
             <div className="open-search">

@@ -28,6 +28,22 @@ class BooksApp extends Component {
         this.setState({ shelf });
       })
     }
+  ChangeShelf = (MovetoShelf, book) => {
+    const shelf = this.state.shelf,
+      originShelf = book.shelf;
+
+    if (shelf[originShelf]) {
+      const newBooksArray = shelf[originShelf].filter(b => (b.id !== book.id));
+      shelf[originShelf] = newBooksArray;
+    }
+
+    if (MovetoShelf !== 'none') {
+      book.shelf = MovetoShelf;
+      shelf[MovetoShelf].push(book);
+    }
+    this.setState({ shelf })
+    BooksAPI.update(book, MovetoShelf)
+  }
 
   render() {
     const { currentlyReading, wantToRead, read } = this.state.shelf;
@@ -40,9 +56,9 @@ class BooksApp extends Component {
             </div>
             <div className="list-books-content">
               <div>
-                <BookShelf ThisShelfBooks={currentlyReading} ShelfName='Currently Reading' />
-                <BookShelf ThisShelfBooks={wantToRead} ShelfName='Want To Read' />
-                <BookShelf ThisShelfBooks={read} ShelfName='Read' />
+                <BookShelf ThisShelfBooks={currentlyReading} onChangeShelf={this.ChangeShelf} ShelfName='Currently Reading' />
+                <BookShelf ThisShelfBooks={wantToRead} onChangeShelf={this.ChangeShelf} ShelfName='Want To Read' />
+                <BookShelf ThisShelfBooks={read} onChangeShelf={this.ChangeShelf} ShelfName='Read' />
               </div>
             </div>
             <div className="open-search">

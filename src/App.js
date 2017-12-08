@@ -33,7 +33,7 @@ class BooksApp extends Component {
       originShelf = book.shelf;
 
     if (shelf[originShelf]) {
-      const newBooksArray = shelf[originShelf].filter(b => (b.id !== book.id));
+      const newBooksArray = shelf[originShelf].filter(otherbook => (otherbook.id !== book.id));
       shelf[originShelf] = newBooksArray;
     }
 
@@ -67,7 +67,9 @@ class BooksApp extends Component {
           </div>
       )}/>
       {/* search book and add book to shelf */}
-      <Route path='/search' component={SearchBooks} />
+      <Route path='/search' component={()=>(
+          <SearchBooks books={this.state.shelf} onChangeShelf={this.ChangeShelf}/>
+      )} />
       </div>
     )
   }
